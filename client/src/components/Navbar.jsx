@@ -3,7 +3,6 @@ import { assets } from '../assets/assets.js'
 import { Link } from 'react-router-dom'
 
 const Navbar = ({setShowLogin}) => {
-    console.log(setShowLogin);
     
   return (
     <div className='shadow py-4'>
