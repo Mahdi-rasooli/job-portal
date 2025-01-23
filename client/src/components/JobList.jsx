@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../context/contextStore'
-import { assets, JobCategories, JobLocations } from '../assets/assets'
+import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
+import JobCard from './jobCard'
+
 
 
 const JobList = () => {
@@ -39,7 +41,7 @@ const JobList = () => {
         const mathcesLocation = job => selectedLocation.length === 0 || selectedLocation.includes(job.location)
 
         const mathcesTitle = job => searchFilter.title === "" || job.title.toLowerCase().includes(searchFilter.title.toLowerCase())
-    
+
         const mathcesLocationSearch = job => searchFilter.location === "" || job.title.toLowerCase().includes(searchFilter.location.toLowerCase())
 
         const newfilteredJobs = jobs.slice().reverse().filter(
@@ -48,7 +50,7 @@ const JobList = () => {
 
         setFilteredJobs(newfilteredJobs)
         setCurrentPage(1)
-    },[jobs,selectedCategories,selectedLocation,searchFilter])
+    }, [jobs, selectedCategories, selectedLocation, searchFilter])
 
     return (
         <div className='container 2xl:px-20 flex flex-col lg:flex-row mx-auto max-lg:space-y-8 py-8'>
@@ -120,8 +122,10 @@ const JobList = () => {
                 <h3 className='font-medium text-3xl py-2' id='job-list'>Latest jobs</h3>
                 <p className='mb-8'>Get your desired job from top companies</p>
                 <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
-                    {
-                        filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
+                    { jobsData.map((job,index) => (
+                        <JobCard key={index} job={job} />
+                    ))
+                        /*filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
 
                             <div key={index} className='p-6 shadow rounded border'>
                                 <div className='flex justify-between items-center'>
@@ -144,7 +148,7 @@ const JobList = () => {
                                 </div>
                             </div>
                         ))
-                    }
+                    */}
                 </div>
                 {filteredJobs.length > 0 && (
                     <div className='flex items-center justify-center space-x-2 mt-10'>
@@ -152,7 +156,7 @@ const JobList = () => {
                             <img onClick={() => setCurrentPage(Math.max(currentPage - 1))} src={assets.left_arrow_icon} alt="" />
                         </a>
                         {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
-                            <a href="#job-list">
+                            <a key={index} href="#job-list">
                                 <button onClick={() => setCurrentPage(index + 1)}
                                     className={`w-10 h-10 flex items-center justify-center rounded border border-gray-300 ${currentPage === index + 1 ? 'bg-blue-100 text-blue-500' : 'text-gray-500'}`}>
                                     {index + 1}

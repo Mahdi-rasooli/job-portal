@@ -3,6 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
+* {
     font-family: outfit;
+}
+
+@layer base {
+    html{
+        scroll-behavior: smooth;
+    }
+}
+
+::--webkit-scrollbar{
+    display: none;
 }
