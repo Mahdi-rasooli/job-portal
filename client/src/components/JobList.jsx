@@ -52,6 +52,8 @@ const JobList = () => {
         setCurrentPage(1)
     }, [jobs, selectedCategories, selectedLocation, searchFilter])
 
+    console.log(filteredJobs)
+
     return (
         <div className='container 2xl:px-20 flex flex-col lg:flex-row mx-auto max-lg:space-y-8 py-8'>
             <div className='bg-white w-full lg:w-1/4 px-4'>
@@ -122,33 +124,33 @@ const JobList = () => {
                 <h3 className='font-medium text-3xl py-2' id='job-list'>Latest jobs</h3>
                 <p className='mb-8'>Get your desired job from top companies</p>
                 <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
-                    { jobsData.map((job,index) => (
+                    {/*jobsData.map((job, index) => (
                         <JobCard key={index} job={job} />
-                    ))
-                        /*filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
+                    ))*/}
+                    {filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => (
 
-                            <div key={index} className='p-6 shadow rounded border'>
-                                <div className='flex justify-between items-center'>
-                                    <img src={job.companyId.image} className='h-8 ' alt="" />
-                                </div>
-                                <h3 className='font-medium text-xl mt-2'>{job.title}</h3>
-                                <div className='flex items-center gap-3 mt-3 text-xs'>
-                                    <span className=' bg-blue-50 px-4 py-1.5 rounded border border-blue-200'>
-                                        {job.location}
-                                    </span>
-                                    <span className='bg-red-50 px-4 py-1.5 rounded border border-red-200'>
-                                        {job.title}
-                                    </span>
-                                </div>
-                                <p className='text-gray-500 text-sm mt-4' dangerouslySetInnerHTML={{ __html: job.description.slice(0, 150) }}>
-                                </p>
-                                <div className='flex gap-4 mt-4 text-sm'>
-                                    <button onClick={() => {navigate(`/apply-job/${job._id}`); scrollTo(0,0)}} className='bg-blue-600 rounded py-2 px-4  text-white'>Apply now</button>
-                                    <button onClick={() => {navigate(`/apply-job/${job._id}`); scrollTo(0,0)}} className='bg-white rounded py-2 px-4  text-gray-500 border border-gray-500'>Learn more</button>
-                                </div>
+                        <div key={index} className='p-6 shadow rounded border'>
+                            <div className='flex justify-between items-center'>
+                                <img src={job.companyId.image} className='h-8 ' alt="" />
                             </div>
-                        ))
-                    */}
+                            <h3 className='font-medium text-xl mt-2'>{job.title}</h3>
+                            <div className='flex items-center gap-3 mt-3 text-xs'>
+                                <span className=' bg-blue-50 px-4 py-1.5 rounded border border-blue-200'>
+                                    {job.location}
+                                </span>
+                                <span className='bg-red-50 px-4 py-1.5 rounded border border-red-200'>
+                                    {job.title}
+                                </span>
+                            </div>
+                            <p className='text-gray-500 text-sm mt-4' dangerouslySetInnerHTML={{ __html: job.description.slice(0, 150) }}>
+                            </p>
+                            <div className='flex gap-4 mt-4 text-sm'>
+                                <button onClick={() => { navigate(`/apply-job/${job._id}`); scrollTo(0, 0) }} className='bg-blue-600 rounded py-2 px-4  text-white'>Apply now</button>
+                                <button onClick={() => { navigate(`/apply-job/${job._id}`); scrollTo(0, 0) }} className='bg-white rounded py-2 px-4  text-gray-500 border border-gray-500'>Learn more</button>
+                            </div>
+                        </div>
+                    ))
+                    }
                 </div>
                 {filteredJobs.length > 0 && (
                     <div className='flex items-center justify-center space-x-2 mt-10'>
