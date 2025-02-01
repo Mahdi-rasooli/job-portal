@@ -5,10 +5,10 @@ import JobList from '../components/JobList'
 import AppDownload from '../components/AppDownload'
 import Footer from '../components/Footer'
 
-const Home = ({setShowLogin}) => {
+const Home = ({setShowRecruiterLogin}) => {
   return (
     <div>
-        <Navbar setShowLogin={setShowLogin}/>
+        <Navbar setShowRecruiterLogin={setShowRecruiterLogin}/>
         <Header />
         <JobList />
         <AppDownload />
