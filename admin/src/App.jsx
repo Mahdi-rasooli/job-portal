@@ -3,7 +3,7 @@ import Dashbord from './pages/Dashbord'
 import ManageJobs from './pages/ManageJobs'
 import ViewApplications from './pages/ViewApplications'
 import AddJobs from './pages/AddJobs'
-
+import 'quill/dist/quill.snow.css'
 
 function App() {
 
