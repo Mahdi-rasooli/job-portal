@@ -10,7 +10,7 @@ const ViewApplications = () => {
 
   return (
     <div className='mx-auto container p-5'>
-      <div className="max-w-4xl mx-auto overflow-hidden rounded-lg shadow border border-gray-200">
+      <div className="max-w-4xl mx-auto  rounded-lg shadow border border-gray-200">
         <table className='w-full bg-white  max-sm:text-sm'>
           <thead>
             <tr className='border-b border-gray-200'>
@@ -38,7 +38,7 @@ const ViewApplications = () => {
                     Resume <img src={assets.resume_download_icon} alt="" />
                   </a>
                 </td>
-                <td className='py-2.5 px-6 relative'>
+                <td className='py-2.5 px-4 relative'>
                   <div className='relative inline-block text-left group'>
                     <button className='text-gray-500 action-button'>...</button>
                     <div className='z-10 hidden absolute right-0 md:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block'>
