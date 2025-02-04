@@ -1,8 +1,11 @@
+import './config/instrument.js'
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv' 
 import connedDB from './config/db.js'
+import * as Sentry from "@sentry/node";
+
 
 
 const app = express()
@@ -16,8 +19,14 @@ app.get('/',(req,res) => {
     res.send('server is working')
 })
 
+app.get('/debug-sentry',function mainHandler(req,res){
+    throw new Error("Test Error");
+})
+
 // connect db
 await connedDB()
+
+Sentry.setupExpressErrorHandler(app)
 
 const PORT = process.env.PORT || 5000
 
