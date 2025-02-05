@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv' 
 import connedDB from './config/db.js'
 import * as Sentry from "@sentry/node";
-
+import companyRoutes from './routes/companyRouters.js' 
 
 
 const app = express()
@@ -22,6 +22,9 @@ app.get('/',(req,res) => {
 app.get('/debug-sentry',function mainHandler(req,res){
     throw new Error("Test Error");
 })
+
+// companies api
+app.use('/api/company', companyRoutes) 
 
 // connect db
 await connedDB()
