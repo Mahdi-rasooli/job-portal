@@ -11,6 +11,36 @@ import upload from '../config/multer.js'
 // 500: Internal Server Error
 
 const registerCompany = async (req, res) => {
+    const { name, password, email} = req.body 
+
+    const imageFile = req.file 
+
+    if (!name || !email || !password || !imageFile) {
+        return res.status(400).json({success:false , message:'Missing Details'})
+    }
+
+
+    try {
+        const companyExist = await companyModel.findOne({email})
+
+        if (companyExist) {
+            return res.status.json({success:false , message:'Company already registered'})
+        }
+
+
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+        const company = new companyModel({
+            name,
+            password: hashedPassword,
+            email,
+            image: imageFile.filename
+        })
+
+    } catch (error) {
+        
+    }
+
 
 }
 

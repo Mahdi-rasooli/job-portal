@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import connedDB from './config/db.js'
 import * as Sentry from "@sentry/node";
 import companyRoutes from './routes/companyRouters.js' 
+import connectCloudinary from './config/cloudinary.js'
 
 
 const app = express()
@@ -28,6 +29,9 @@ app.use('/api/company', companyRoutes)
 
 // connect db
 await connedDB()
+
+// connect cloudinary
+await connectCloudinary()
 
 Sentry.setupExpressErrorHandler(app)
 
