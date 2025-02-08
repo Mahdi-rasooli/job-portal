@@ -41,8 +41,10 @@ const registerCompany = async (req, res) => {
             image: imageUpload.secure_url
         })
 
+        await company.save()
 
-        res.json({
+
+        res.status(200).json({
             success: true,
             company: {
                 _id: company._id,
@@ -54,14 +56,43 @@ const registerCompany = async (req, res) => {
         })
 
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        res.status(500).json({ success: false, message: error.message })
     }
 
 
 }
 
 const loginCompany = async (req, res) => {
-    // Implementation here
+
+    const { email, password } = req.body
+
+    try {
+        const company = await companyModel.findOne({ email })
+
+        if (!company) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        const isMatch = await bcrypt.compare(password, company.password);
+
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: "Invalid email or password" });
+        }
+
+        res.status(200).json({
+            success: true,
+            company: {
+                _id: company._id,
+                name: company.name,
+                email: company.email,
+                image: company.image,
+            },
+            token: generateToken(company._id),
+        });
+
+    } catch (error) {
+        res.status(500).json({success:false, message:error.message})
+    }
 }
 
 const getJobs = async (req, res) => {
@@ -69,7 +100,7 @@ const getJobs = async (req, res) => {
 }
 
 const addJob = async (req, res) => {
-    // Implementation here
+
 }
 
 const getJobApplicants = async (req, res) => {
