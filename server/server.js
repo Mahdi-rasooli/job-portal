@@ -7,6 +7,7 @@ import connedDB from './config/db.js'
 import * as Sentry from "@sentry/node";
 import companyRoutes from './routes/companyRouters.js' 
 import connectCloudinary from './config/cloudinary.js'
+import jobRouter from './routes/jobRoutes.js'
 
 
 const app = express()
@@ -26,6 +27,7 @@ app.get('/debug-sentry',function mainHandler(req,res){
 
 // companies api
 app.use('/api/company', companyRoutes) 
+app.use('/api/jobs' , jobRouter)
 
 // connect db
 await connedDB()

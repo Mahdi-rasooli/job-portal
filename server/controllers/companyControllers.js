@@ -5,6 +5,7 @@ import validator from 'validator'
 import upload from '../config/multer.js'
 import { v2 as cloudinary } from 'cloudinary'
 import generateToken from '../utils/generateToken.js'
+import jobModel from '../models/JobModel.js'
 
 // 400: Bad Request (Invalid Input)
 // 401: Unauthorized (Incorrect Password)
@@ -101,6 +102,31 @@ const getJobs = async (req, res) => {
 
 const addJob = async (req, res) => {
 
+    const {title , description , location , joblevel , category , salary} = req.body
+
+    const companyId = req.company._id
+
+    try {
+
+        const newJob = new jobModel({
+            title ,
+            description ,
+            location ,
+            joblevel ,
+            category ,
+            salary ,
+            companyId ,
+            date: Date.now()
+        })
+
+        await newJob.save()
+
+        res.json({success: true,newJob
+        })
+
+    } catch (error) {
+        res.status(500).json({success:false, message:error.message})
+    }
 }
 
 const getJobApplicants = async (req, res) => {

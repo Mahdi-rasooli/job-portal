@@ -9,7 +9,7 @@ const jobSchema = await mongoose.Schema({
     joblevel : {type:String , required:true },
     salary : {type:Number , required:true},
     date : {type:Number, required:true},
-    visible : {type:Boolean , required:true},
+    visible : {type:Boolean , default:true},
     companyId : {type:mongoose.Schema.Types.ObjectId , ref:"User" , required:true}
 })
 
