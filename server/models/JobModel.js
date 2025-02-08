@@ -10,7 +10,7 @@ const jobSchema = await mongoose.Schema({
     salary : {type:Number , required:true},
     date : {type:Number, required:true},
     visible : {type:Boolean , default:true},
-    companyId : {type:mongoose.Schema.Types.ObjectId , ref:"User" , required:true}
+    companyId : {type:mongoose.Schema.Types.ObjectId , ref:"company" , required:true}
 })
 
 const jobModel = mongoose.models.job || mongoose.model('job',jobSchema)
