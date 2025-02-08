@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import validator from 'validator'
 import upload from '../config/multer.js'
+import { v2 as cloudinary } from 'cloudinary'
+import generateToken from '../utils/generateToken.js'
 
 // 400: Bad Request (Invalid Input)
 // 401: Unauthorized (Incorrect Password)
@@ -11,34 +13,48 @@ import upload from '../config/multer.js'
 // 500: Internal Server Error
 
 const registerCompany = async (req, res) => {
-    const { name, password, email} = req.body 
+    const { name, password, email } = req.body
 
-    const imageFile = req.file 
+    const imageFile = req.file
 
     if (!name || !email || !password || !imageFile) {
-        return res.status(400).json({success:false , message:'Missing Details'})
+        return res.status(400).json({ success: false, message: 'Missing Details' })
     }
 
 
     try {
-        const companyExist = await companyModel.findOne({email})
+        const companyExist = await companyModel.findOne({ email })
 
         if (companyExist) {
-            return res.status.json({success:false , message:'Company already registered'})
+            return res.status(409).json({ success: false, message: 'Company already registered' })
         }
 
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
+
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path)
         const company = new companyModel({
             name,
             password: hashedPassword,
             email,
-            image: imageFile.filename
+            image: imageUpload.secure_url
+        })
+
+
+        res.json({
+            success: true,
+            company: {
+                _id: company._id,
+                name: company.name,
+                email: company.email,
+                image: company.image
+            },
+            token: generateToken(company._id)
         })
 
     } catch (error) {
-        
+        res.json({ success: false, message: error.message })
     }
 
 
