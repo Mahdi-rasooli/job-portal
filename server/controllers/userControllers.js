@@ -14,7 +14,41 @@ import generateToken from '../utils/generateToken.js'
 
 const loginUser = async (req, res) => {
 
+    try {
 
+        const { email, password } = req.body
+
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: "Missing details" })
+        }
+
+        const user = await userModel.findOne({ email })
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Please first register" })
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: "Incorrect password" })
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "User logined successfully",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                image: user.image
+            },
+            token: generateToken(user._id)
+        })
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message })
+    }
 }
 
 const registerUser = async (req, res) => {
