@@ -97,7 +97,18 @@ const loginCompany = async (req, res) => {
 }
 
 const getJobs = async (req, res) => {
-    // Implementation here
+    
+    try {
+        
+        const companyId = req.company_id
+
+        const jobs = await jobModel.find(companyId)
+
+        res.status(200).json({success:true , jobsData: jobs })
+
+    } catch (error) {
+        res.json({success:false , message:error.message})
+    }
 }
 
 const addJob = async (req, res) => {
@@ -140,7 +151,7 @@ const getCompanyData = async (req, res) => {
         const company = req.company
 
         res.status(200).json({success:true , company})
-        
+
     } catch (error) {
         res.json({success:false , message:error.message})
     }
