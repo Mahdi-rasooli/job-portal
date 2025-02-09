@@ -92,51 +92,52 @@ const loginCompany = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({success:false, message:error.message})
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 
 const getJobs = async (req, res) => {
-    
+
     try {
-        
+
         const companyId = req.company_id
 
         const jobs = await jobModel.find(companyId)
 
-        res.status(200).json({success:true , jobsData: jobs })
+        res.status(200).json({ success: true, jobsData: jobs })
 
     } catch (error) {
-        res.json({success:false , message:error.message})
+        res.json({ success: false, message: error.message })
     }
 }
 
 const addJob = async (req, res) => {
 
-    const {title , description , location , joblevel , category , salary} = req.body
+    const { title, description, location, joblevel, category, salary } = req.body
 
     const companyId = req.company._id
 
     try {
 
         const newJob = new jobModel({
-            title ,
-            description ,
-            location ,
-            joblevel ,
-            category ,
-            salary ,
-            companyId ,
+            title,
+            description,
+            location,
+            joblevel,
+            category,
+            salary,
+            companyId,
             date: Date.now()
         })
 
         await newJob.save()
 
-        res.json({success: true,newJob
+        res.json({
+            success: true, newJob
         })
 
     } catch (error) {
-        res.status(500).json({success:false, message:error.message})
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 
@@ -145,15 +146,15 @@ const getJobApplicants = async (req, res) => {
 }
 
 const getCompanyData = async (req, res) => {
-    
+
     try {
 
         const company = req.company
 
-        res.status(200).json({success:true , company})
+        res.status(200).json({ success: true, company })
 
     } catch (error) {
-        res.json({success:false , message:error.message})
+        res.status(500).json({ success: false, message: error.message })
     }
 }
 
@@ -162,7 +163,33 @@ const changeApplicantsStatus = async (req, res) => {
 }
 
 const changeJobVisiblity = async (req, res) => {
-    // Implementation here
+
+
+    try {
+
+        const { id } = req.body   
+
+        const companyId = req.company._id
+
+        const jobs = await jobModel.findById(id)
+
+        if (companyId.toString() === jobs.companyId.toString()) {
+            jobs.visible = !jobs.visible
+        }
+
+        else{
+            return res.status(403).json({ success: false, message: "You are not authorized"})
+        }
+
+        await jobs.save()
+        
+        res.status(200).json({success:true , jobs})
+        
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message })
+    }
+
+
 }
 
 export { loginCompany, registerCompany, addJob, getJobs, getJobApplicants, getCompanyData, changeApplicantsStatus, changeJobVisiblity }
