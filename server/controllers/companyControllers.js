@@ -134,7 +134,16 @@ const getJobApplicants = async (req, res) => {
 }
 
 const getCompanyData = async (req, res) => {
-    // Implementation here
+    
+    try {
+
+        const company = req.company
+
+        res.status(200).json({success:true , company})
+        
+    } catch (error) {
+        res.json({success:false , message:error.message})
+    }
 }
 
 const changeApplicantsStatus = async (req, res) => {
