@@ -1,11 +1,12 @@
 import express from 'express'
 import {getUserData , getUserApllicationsForJob , loginUser , registerUser , updateUserResume , applyForJob} from '../controllers/userControllers.js'
 import protectUser from '../middlewares/authMiddlewareUsers.js'
+import upload from '../config/multer.js'
 
 const userRouter = express.Router()
 
-userRouter.post('/register',protectUser , registerUser)
-userRouter.post('/login' , protectUser , loginUser)
+userRouter.post('/register', upload.single('image') , registerUser)
+userRouter.post('/login' , loginUser)
 userRouter.get('/getuser-data' , protectUser , getUserData)
 userRouter.post('/update', protectUser , updateUserResume)
 userRouter.get('/user-application/:id', protectUser , getUserApllicationsForJob)
