@@ -116,6 +116,20 @@ const registerUser = async (req, res) => {
 
 const getUserData = async (req, res) => {
 
+    try {
+        const id = req.user._id
+
+        const user = await userModel.findById(id).select("-password")
+
+        if (!user) {
+            res.status(404).json({success:false , message:"User not found"})
+        }
+        
+        return res.status(200).json({success:true , userData:user})
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
 }
 
 const applyForJob = async (req, res) => {
