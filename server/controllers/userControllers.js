@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'
 import validator from 'validator'
 import { v2 as cloudinary } from 'cloudinary'
 import generateToken from '../utils/generateToken.js'
+import applicantsModel from '../models/ApplicantsModel.js'
+import jobModel from '../models/JobModel.js'
 
 
 // 400: Bad Request (Invalid Input)
@@ -122,10 +124,10 @@ const getUserData = async (req, res) => {
         const user = await userModel.findById(id).select("-password")
 
         if (!user) {
-            res.status(404).json({success:false , message:"User not found"})
+            res.status(404).json({ success: false, message: "User not found" })
         }
-        
-        return res.status(200).json({success:true , userData:user})
+
+        return res.status(200).json({ success: true, userData: user })
 
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message })
@@ -134,6 +136,37 @@ const getUserData = async (req, res) => {
 
 const applyForJob = async (req, res) => {
 
+    try {
+        const { jobId } = req.body
+
+        const userId = req.user._id       
+
+        const isAlreadyApplied = await applicantsModel.findOne({ jobId , userId })
+
+        if (isAlreadyApplied) {
+            return res.status(409).json({success:false , message:"User already applied"})
+        }
+
+        const jobData = await jobModel.findById(jobId)
+
+        if (!jobData) {
+            return res.status(404).json({success:false , message:"Job not found"})
+        }
+
+        await applicantsModel.create({
+            userId,
+            jobId, 
+            companyId:jobData.companyId,
+            date: Date.now()
+        })
+
+
+        return res.status(200).json({success:true , message:"Applied successfully"})
+
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
 }
 
 const getUserApllicationsForJob = async (req, res) => {
