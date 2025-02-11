@@ -6,7 +6,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import generateToken from '../utils/generateToken.js'
 import applicantsModel from '../models/ApplicantsModel.js'
 import jobModel from '../models/JobModel.js'
-
+import mongoose from 'mongoose'
 
 // 400: Bad Request (Invalid Input)
 // 401: Unauthorized (Incorrect Password)
@@ -214,5 +214,55 @@ const updateUserResume = async (req, res) => {
 }
 
 
+const updatePassword = async (req,res) => {
 
-export { getUserData, getUserApllicationsForJob, loginUser, registerUser, updateUserResume, applyForJob }
+    try {
+
+        const userId = req.params.userId
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "Invalid User ID" });
+        }
+
+        const userData = await userModel.findById(userId)
+
+        if (!userData) {
+            return res.status(404).json({ success: false , message: 'User does not exist'})
+        }
+        
+        const newPassword = req.body.password
+
+        if (!newPassword) {
+            return res.status(400).json({ success: false , message: 'Missing password'})
+        }
+
+        if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
+            return res.status(400).json({
+                success: false,
+                message: "Password must be at least 8 characters long, contain at least one uppercase letter, and one number."
+            })
+        };
+
+        const isSamePassword = await bcrypt.compare(newPassword, userData.password);
+        if (isSamePassword) {
+            return res.status(409).json({ success: false, message: "Please use a new password" });
+        }
+
+        const salt = await bcrypt.genSalt(10)
+        const hashedNewPassword = await bcrypt.hash(newPassword, salt)
+
+        userData.password = hashedNewPassword
+
+        await userData.save()
+
+        return res.status(200).json({ success: true , message: 'Password updated successfully'})
+
+
+    } catch (error) {
+        return res.status(500).json({ success: false , message: error.message})
+    }
+}
+
+
+
+export { getUserData, getUserApllicationsForJob, loginUser, registerUser, updateUserResume, applyForJob , updatePassword }
