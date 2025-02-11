@@ -139,29 +139,29 @@ const applyForJob = async (req, res) => {
     try {
         const { jobId } = req.body
 
-        const userId = req.user._id       
+        const userId = req.user._id
 
-        const isAlreadyApplied = await applicantsModel.findOne({ jobId , userId })
+        const isAlreadyApplied = await applicantsModel.findOne({ jobId, userId })
 
         if (isAlreadyApplied) {
-            return res.status(409).json({success:false , message:"User already applied"})
+            return res.status(409).json({ success: false, message: "User already applied" })
         }
 
         const jobData = await jobModel.findById(jobId)
 
         if (!jobData) {
-            return res.status(404).json({success:false , message:"Job not found"})
+            return res.status(404).json({ success: false, message: "Job not found" })
         }
 
         await applicantsModel.create({
             userId,
-            jobId, 
-            companyId:jobData.companyId,
+            jobId,
+            companyId: jobData.companyId,
             date: Date.now()
         })
 
 
-        return res.status(200).json({success:true , message:"Applied successfully"})
+        return res.status(200).json({ success: true, message: "Applied successfully" })
 
 
     } catch (error) {
@@ -170,6 +170,22 @@ const applyForJob = async (req, res) => {
 }
 
 const getUserApllicationsForJob = async (req, res) => {
+
+    try {
+        const { userId } = req.params
+
+        const appliedJob = await applicantsModel.find({ userId }).
+            populate('companyId', 'name email image').populate('jobId', 'title description location joblevel category salary').exec()
+
+        if (!appliedJob) {
+            return res.status(404).json({ success: false, message: 'No job applicants found for this user' })
+        }
+
+        return res.status(200).json({ success: true, appliedJob })
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
 
 }
 
