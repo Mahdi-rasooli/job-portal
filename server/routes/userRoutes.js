@@ -8,7 +8,7 @@ const userRouter = express.Router()
 userRouter.post('/register', upload.single('image') , registerUser)
 userRouter.post('/login' , loginUser)
 userRouter.get('/getuser-data' , protectUser , getUserData)
-userRouter.post('/update', protectUser , updateUserResume)
+userRouter.post('/update-resume', protectUser , upload.single('resume') ,  updateUserResume)
 userRouter.get('/user-application/:id', protectUser , getUserApllicationsForJob)
 userRouter.post('/apply-job', protectUser , applyForJob)
 

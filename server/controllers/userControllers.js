@@ -191,6 +191,26 @@ const getUserApllicationsForJob = async (req, res) => {
 
 const updateUserResume = async (req, res) => {
 
+    try {
+        
+        const userId = req.user._id
+
+        const resumeFile = req.resumeFile
+
+        const userData = await userModel.findById(userId)
+
+        if (resumeFile) {
+            const resumeUpload = await cloudinary.uploader.upload(resumeFile.path)
+            userData.resume = resumeUpload.secure_url
+        }
+
+        await userData.save()
+
+        return res.status(200).json({success:true , message:'Resume updated'})
+
+    } catch (error) {
+        return res.status(500).json({success:false , message:error.message})
+    }
 }
 
 
