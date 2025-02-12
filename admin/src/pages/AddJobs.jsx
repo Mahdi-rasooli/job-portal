@@ -1,8 +1,14 @@
 import Quill from 'quill'
 import React, { useEffect, useRef, useState } from 'react'
 import { JobCategories, JobLocations } from '../../../client/src/assets/assets'
+import { toast } from 'react-toastify'
+import { useContext } from 'react'
+import { AppContext } from '../context/contextStore'
+import axios from 'axios'
 
 const AddJobs = () => {
+
+  const { backendUrl , companyToken } = useContext(AppContext)
 
   const [data, setData] = useState({
     title: '',
@@ -22,6 +28,52 @@ const AddJobs = () => {
     setData(prev => ({ ...prev, [name]: value }))
   }
 
+
+  const onSubmitHandler = async (event) => {
+    event.preventDefault()
+
+    try {
+      const description = quillRef.current.root.innerHTML
+
+      const jobData = {
+        title: data.title,
+        description: description,
+        category: data.category,
+        location: data.location,
+        joblevel: data.level,
+        salary: data.salary
+      }
+
+      const response = await axios.post(backendUrl + '/api/company/add-job ',
+        jobData, { headers: { token: companyToken } })
+
+      if (response.data.success) {
+
+        setData({
+          title: '',
+          description: '',
+          category: 'Programming',
+          location: 'Banglore',
+          level: 'Senior level',
+          salary: ''
+        })
+
+        quillRef.current.root.innerHTML = ''
+        toast.success('Job added successfully')
+
+      }
+
+      else {
+        toast.error('Failed to add job')
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+
+  }
+
+
   useEffect(() => {
     if (!quillRef.current && editorRef.current) {
       quillRef.current = new Quill(editorRef.current, {
@@ -32,18 +84,18 @@ const AddJobs = () => {
 
   return (
     <div>
-      <form className='container flex flex-col p-4 w-full items-start gap-3'>
+      <form onSubmit={onSubmitHandler} className='container flex flex-col p-4 w-full items-start gap-3'>
 
         <div className='w-full'>
           <p className='mb-2'>Job Title</p>
-          <input onChange={onChangeHandler} 
-                 type="text" 
-                 required 
-                 placeholder='Type here' 
-                 name='title' 
-                 value={data.title} 
-                  className='w-full max-w-lg px-3 py-2 border-2 border-gray-300'
-                 />
+          <input onChange={onChangeHandler}
+            type="text"
+            required
+            placeholder='Type here'
+            name='title'
+            value={data.title}
+            className='w-full max-w-lg px-3 py-2 border-2 border-gray-300'
+          />
         </div>
 
         <div className='w-full max-w-lg'>
@@ -91,14 +143,14 @@ const AddJobs = () => {
 
         <div>
           <p className='mb-2'>Job Salary</p>
-          <input min={0} 
-                 className='w-full px-3 py-2 rounded sm:w-[120px] max-w-lg border-2 border-gray-300' 
-                 onChange={onChangeHandler} 
-                 value={data.salary} 
-                 name='salary' 
-                 type="Number" 
-                 required 
-                 placeholder='2500' />
+          <input min={0}
+            className='w-full px-3 py-2 rounded sm:w-[120px] max-w-lg border-2 border-gray-300'
+            onChange={onChangeHandler}
+            value={data.salary}
+            name='salary'
+            type="Number"
+            required
+            placeholder='2500' />
         </div>
 
         <button className='w-28 py-3 mt-4 bg-black text-white cursor-pointer hover:bg-gray-800 rounded'>Add</button>
