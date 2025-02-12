@@ -27,21 +27,21 @@ const RecruterLogin = ({ setShowRecruiterLogin }) => {
         setData((prev) => ({ ...prev, [name]: value }))
     }
 
-
     const onSubmitHandler = async (event) => {
-        console.log('working');
-        
-
         event.preventDefault()
 
+        if (currentState === 'Sign up' && !isSubmitted) {
+            setIsSubmitted(true)
+            return
+        }
+
+
+
         try {
-
             if (currentState === 'Login') {
-
                 const { data: responseData } = await axios.post(backendUrl + '/api/company/login', {
                     email: data.email,
                     password: data.password
-
                 })
 
                 if (responseData.success) {
@@ -51,36 +51,32 @@ const RecruterLogin = ({ setShowRecruiterLogin }) => {
                     localStorage.setItem('companyToken', responseData.token)
                     setIsSubmitted(true)
                     toast.success('Login Successful')
-                    navigate('/')
-                }
-                else {
+                    navigate('/dashbord')
+                } else {
                     toast.error(responseData.message)
                 }
-            }
-            else {
-                const { data: responseData } = await axios.post(backendUrl + '/api/company/register', {
-                    name: data.name,
-                    email: data.email,
-                    password: data.password,
-                    image: image
-                })
+            } else {
+
+                const formData = new FormData();
+                formData.append('name', data.name);
+                formData.append('email', data.email);
+                formData.append('password', data.password);
+                formData.append('image', image);
+                const { data: responseData } = await axios.post(backendUrl + '/api/company/register', formData)
 
                 if (responseData.success) {
                     setCompanyData(responseData.company)
                     setCompanyToken(responseData.token)
                     setShowRecruiterLogin(false)
                     localStorage.setItem('companyToken', responseData.token)
-                    //setIsSubmitted(true)
-                    toast.success('Login Successful')
-                    navigate('/')
-                }
-                else {
+                    toast.success('Registered Successful')
+                    navigate('/dashbord')
+                } else {
                     toast.error(responseData.message)
                 }
             }
-
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
     }
 
@@ -100,15 +96,12 @@ const RecruterLogin = ({ setShowRecruiterLogin }) => {
                     <p className='text-sm'>Welcome back!Please sign in to continue</p>
                 </div>
                 {currentState === 'Sign up' && isSubmitted
-                    ? <>
-                        <div className='flex items-center justify-center gap-4 my-10'>
-                            <label htmlFor="image">
-                                <img className='w-20 h-20 rounded-full border border-gray-200' src={image ? URL.createObjectURL(image) : assets.upload_area} alt="" />
-                                <input onChange={(event) => setImage(event.target.files[0])} type="file" id='image' hidden />
-                            </label>
-                        </div>
-
-                    </>
+                    ? <div className='flex items-center justify-center gap-4 my-10'>
+                        <label htmlFor="image">
+                            <img className='w-20 h-20 rounded-full border border-gray-200' src={image ? URL.createObjectURL(image) : assets.upload_area} alt="" />
+                            <input onChange={(event) => setImage(event.target.files[0])} type="file" id='image' hidden />
+                        </label>
+                    </div>
                     : <div>
                         {currentState === 'Sign up'
                             ? <div className='flex gap-2 border px-4 py-2 items-center rounded-lg mt-5'>
@@ -128,20 +121,11 @@ const RecruterLogin = ({ setShowRecruiterLogin }) => {
 
                 <div>
                     {currentState === 'Login' && <p className='text-sm text-blue-600 my-4 cursor-pointer'>Forgot Password?</p>}
-                    <button type='submit' onClick={(event) => {
-                        event.preventDefault()
-                        if (currentState === 'Sign up') {
-                            setIsSubmitted(true);
-                        }
-                    }} className={`py-2 bg-blue-600 text-white w-full rounded-lg mt-1 mb-4 ${currentState === 'Sign up' ? 'mt-3' : null}`}>{currentState === 'Login' ? 'Login' : isSubmitted ? 'Register' : 'Next'}</button>
+                    <button type='submit' className={`py-2 bg-blue-600 text-white w-full rounded-lg mt-1 mb-4 ${currentState === 'Sign up' ? 'mt-3' : null}`}>{currentState === 'Sign up' ? (isSubmitted ? 'Register' : 'Next') : 'Login'}</button>
                 </div>
                 {currentState === 'Login'
                     ? <p>Don't have an account?<span href="" className='text-blue-600 cursor-pointer' onClick={() => setCurrentState('Sign up')}>Sign up</span></p>
                     : <p>Already registered?<span href="" className='text-blue-600 cursor-pointer' onClick={() => setCurrentState('Login')}>Login</span></p>}
-
-                {
-                    <img className='absolute top-5 right-5 cursor-pointer' onClick={() => setShowRecruiterLogin(false)} src={assets.cross_icon} alt="" />
-                }
             </form>
         </div>
     )

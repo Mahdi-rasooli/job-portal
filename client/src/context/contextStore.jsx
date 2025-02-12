@@ -5,6 +5,8 @@ export const AppContext = createContext()
 
 export const AppcontextProvider = (props) => {
 
+    const backendUrl = `http://localhost:5000`
+
     const [searchFilter,setSearchFilter] = useState({
         title: '',
         location: ''
@@ -13,6 +15,9 @@ export const AppcontextProvider = (props) => {
     const [isSearching,setIsSearching] = useState(false)
 
     const [jobs, setJobs] = useState([])
+
+    const [companyToken , setCompanyToken] = useState(null)
+    const [companyData , setCompanyData] = useState(null)
 
     const fetchJobs = async() => {
         setJobs(jobsData)
@@ -28,7 +33,12 @@ export const AppcontextProvider = (props) => {
         isSearching,
         setIsSearching,
         jobs,
-        setJobs
+        setJobs,
+        companyData,
+        setCompanyData,
+        companyToken,
+        setCompanyToken,
+        backendUrl
     }
 
     return (

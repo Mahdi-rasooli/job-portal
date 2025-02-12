@@ -6,6 +6,8 @@ import Applications from './pages/Applications'
 import { AppcontextProvider } from './context/contextStore'
 import LoginPopUp from './components/LoginPopUp'
 import RecruiterLogin from './components/RecruiterLogin'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 
@@ -18,9 +20,10 @@ function App() {
     <BrowserRouter>
       <>
         <AppcontextProvider>
-
+        
           <div>
-            {showRecruiterLogin ? <RecruiterLogin setShowRecruiterLogin={setShowRecruiterLogin} /> : <></>}
+            {/*showRecruiterLogin ? <RecruiterLogin setShowRecruiterLogin={setShowRecruiterLogin} /> : <></>*/}
+            <ToastContainer />
             <Routes>
               <Route path='/' element={<Home setShowRecruiterLogin={setShowRecruiterLogin} showRecruiterLogin={showRecruiterLogin} />} />
               <Route path='/Apply-job/:id' element={<ApplyJob />} />

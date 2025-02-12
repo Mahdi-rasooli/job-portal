@@ -52,7 +52,7 @@ const JobList = () => {
         setCurrentPage(1)
     }, [jobs, selectedCategories, selectedLocation, searchFilter])
 
-    console.log(filteredJobs)
+    //console.log(filteredJobs)
 
     return (
         <div className='container 2xl:px-20 flex flex-col lg:flex-row mx-auto max-lg:space-y-8 py-8'>
