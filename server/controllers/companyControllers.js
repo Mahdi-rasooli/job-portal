@@ -6,6 +6,7 @@ import upload from '../config/multer.js'
 import { v2 as cloudinary } from 'cloudinary'
 import generateToken from '../utils/generateToken.js'
 import jobModel from '../models/JobModel.js'
+import applicantsModel from '../models/ApplicantsModel.js'
 
 // 400: Bad Request (Invalid Input)
 // 401: Unauthorized (Incorrect Password)
@@ -104,7 +105,14 @@ const getJobs = async (req, res) => {
 
         const jobs = await jobModel.find(companyId)
 
-        res.status(200).json({ success: true, jobsData: jobs })
+        const jobsWithApplicants = await Promise.all(
+            jobs.map(async (job) => {
+                const applicantCount = await applicantsModel.countDocuments({ job: job._id });
+                return { ...job._doc, applicantCount }
+            })
+        )
+
+        res.status(200).json({ success: true, jobsData: jobsWithApplicants })
 
     } catch (error) {
         res.json({ success: false, message: error.message })
@@ -167,7 +175,7 @@ const changeJobVisiblity = async (req, res) => {
 
     try {
 
-        const { id } = req.body   
+        const { id } = req.body
 
         const companyId = req.company._id
 
@@ -177,14 +185,14 @@ const changeJobVisiblity = async (req, res) => {
             jobs.visible = !jobs.visible
         }
 
-        else{
-            return res.status(403).json({ success: false, message: "You are not authorized"})
+        else {
+            return res.status(403).json({ success: false, message: "You are not authorized" })
         }
 
         await jobs.save()
-        
-        res.status(200).json({success:true , jobs})
-        
+
+        res.status(200).json({ success: true, jobs })
+
     } catch (error) {
         res.status(500).json({ success: false, message: error.message })
     }
