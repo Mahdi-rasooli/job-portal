@@ -7,6 +7,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import generateToken from '../utils/generateToken.js'
 import jobModel from '../models/JobModel.js'
 import applicantsModel from '../models/ApplicantsModel.js'
+import userModel from '../models/UserModel.js'
 
 // 400: Bad Request (Invalid Input)
 // 401: Unauthorized (Incorrect Password)
@@ -101,9 +102,9 @@ const getJobs = async (req, res) => {
 
     try {
 
-        const companyId = req.company_id
+        const companyId = req.company._id
 
-        const jobs = await jobModel.find(companyId)
+        const jobs = await jobModel.find({ companyId })
 
         const jobsWithApplicants = await Promise.all(
             jobs.map(async (job) => {
@@ -150,7 +151,30 @@ const addJob = async (req, res) => {
 }
 
 const getJobApplicants = async (req, res) => {
-    // Implementation here
+
+    try {
+
+        const companyId = req.company._id
+
+        const jobs = await jobModel.find({ companyId }).lean()
+        
+        const applicants = await Promise.all(
+            jobs.map(async (job) => {
+              const applicants = await applicantsModel
+                .find({ jobId: job._id })
+                .populate('userId', 'name')
+                .lean()
+              return { ...job, applicants };
+            })
+          );
+          
+
+        res.status(200).json({ success: true, applicants })
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
+
 }
 
 const getCompanyData = async (req, res) => {
