@@ -12,6 +12,32 @@ const ViewApplications = () => {
   const [data, setData] = useState([])
 
 
+  const [status, setStatus] = useState('Pending')
+
+
+  const changeStatus = async (id, status, jobId) => {
+
+    setStatus(status)
+
+    try {
+
+      const response = await axios.post('http://localhost:5000/api/company/change-status',
+        { userId: id, jobId: jobId , status: status },
+        { headers: { token: companyToken } })
+
+        if (response.data.success) {
+          toast.success('Status changed successfully')
+          fetchApplicantsData()
+        }
+
+        else{
+          toast.error(response.message)
+        }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
 
   const fetchApplicantsData = async () => {
@@ -76,9 +102,9 @@ const ViewApplications = () => {
                     <div className='relative inline-block text-left group'>
                       <button className='text-gray-500 action-button'>...</button>
                       <div className='z-10 hidden absolute right-0 md:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block'>
-                        <button className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 cursor-pointer'>Accept</button>
-                        <button className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer'>Reject</button>
-                        <button className='block w-full text-left px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer'>Reviewed</button>
+                        <button onClick={() => changeStatus(applicant.userId._id, 'Accept',job._id)} className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 cursor-pointer'>Accept</button>
+                        <button onClick={() => changeStatus(applicant.userId._id, 'Reject',job._id)}  className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer'>Reject</button>
+                        <button onClick={() => changeStatus(applicant.userId._id, 'Reviewed',job._id)}  className='block w-full text-left px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer'>Reviewed</button>
                       </div>
                     </div>
                   </td>

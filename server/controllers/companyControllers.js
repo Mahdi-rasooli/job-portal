@@ -157,17 +157,17 @@ const getJobApplicants = async (req, res) => {
         const companyId = req.company._id
 
         const jobs = await jobModel.find({ companyId }).lean()
-        
+
         const applicants = await Promise.all(
             jobs.map(async (job) => {
-              const applicants = await applicantsModel
-                .find({ jobId: job._id })
-                .populate('userId', 'name')
-                .lean()
-              return { ...job, applicants };
+                const applicants = await applicantsModel
+                    .find({ jobId: job._id, companyId })
+                    .populate('userId', 'name')
+                    .lean()
+                return { ...job, applicants };
             })
-          );
-          
+        );
+
 
         res.status(200).json({ success: true, applicants })
 
@@ -191,7 +191,33 @@ const getCompanyData = async (req, res) => {
 }
 
 const changeApplicantsStatus = async (req, res) => {
-    // Implementation here
+
+
+    try {
+
+        const company = req.company._id
+
+        const { status } = req.body
+
+        const { userId } = req.body
+
+        const { jobId } = req.body
+
+        const changeStatus = await applicantsModel.findOneAndUpdate({ userId: userId, companyId: company, jobId: jobId }, {
+            status: status
+        }, { new: true })
+
+        await changeStatus.save()
+
+        if (!changeStatus) {
+            return res.status(404).json({ success: false, message: "Failed to change status" })
+        }
+
+        res.status(200).json({ success: true, message: "Status changed successfully" })
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
 }
 
 const changeJobVisiblity = async (req, res) => {
