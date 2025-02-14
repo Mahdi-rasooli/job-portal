@@ -8,7 +8,8 @@ import kConvert from 'k-convert'
 import moment from 'moment'
 import JobCard from '../components/jobCard'
 import Footer from '../components/Footer'
-
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const ApplyJob = () => {
 
@@ -17,14 +18,16 @@ const ApplyJob = () => {
 
   const [jobData, setJobData] = useState(null)
 
-  const { jobs } = useContext(AppContext)
+  const { jobs , backendUrl , companyToken } = useContext(AppContext)
+
+  //console.log(jobs);
+  
 
   const fetchJobs = async () => {
     const data = jobs.filter(job => job._id === id)
     if (data.length > 0) {
       setJobData(data[0])
       console.log(data[0]);
-
     }
   }
 
@@ -34,6 +37,29 @@ const ApplyJob = () => {
     }
 
   }, [id, jobs])
+
+  console.log(jobData._id);
+  
+
+  const applyUserForJob = async () => {
+
+    try {
+
+      const jobId = jobData._id
+
+      const response = await axios.post(backendUrl + '/api/user/apply-job', {jobId} ,{ headers : { token : companyToken}})
+
+      if (response.data.success) {
+        toast.success("Apllied successfully")
+      }
+      else{
+        toast.error(response.data.message)
+      }
+      
+    } catch (error) {
+      toast.error("Network Error")
+    }
+  }
 
   return jobData ? (
     <>
@@ -75,7 +101,7 @@ const ApplyJob = () => {
             <div className='w-full lg:w-2/3'>
               <h2 className='font-bold text-2xl mb-4'>Job description</h2>
               <div className='rich-text' dangerouslySetInnerHTML={{ __html: jobData.description}}></div>
-              <button className='bg-blue-500 mt-10 rounded text-white px-10 p-2.5'>Apply now</button>
+              <button className='bg-blue-500 mt-10 rounded text-white px-10 p-2.5' onClick={applyUserForJob}>Apply now</button>
             </div>
 
             <div className='w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5'>

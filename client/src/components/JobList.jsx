@@ -35,6 +35,7 @@ const JobList = () => {
 
             if (response.data.success) {
                 setData(response.data.jobs)
+                setJobs(response.data.jobs)
             }
             else {
                 console.log('Failed to fetch data');
