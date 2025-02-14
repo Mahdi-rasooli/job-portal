@@ -3,12 +3,16 @@ import { AppContext } from '../context/contextStore'
 import { assets, JobCategories, JobLocations, jobsData } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import JobCard from './jobCard'
-
-
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const JobList = () => {
 
-    const { searchFilter, setSearchFilter, isSearching, jobs } = useContext(AppContext)
+    const { searchFilter, setSearchFilter, isSearching } = useContext(AppContext)
+
+    const { backendUrl, setJobs } = useContext(AppContext)
+
+    const [data, setData] = useState([])
 
     const [showFilter, setShowFilter] = useState(true)
 
@@ -18,9 +22,33 @@ const JobList = () => {
 
     const [selectedLocation, setSelectedLocation] = useState([])
 
-    const [filteredJobs, setFilteredJobs] = useState(jobs)
+    const [filteredJobs, setFilteredJobs] = useState(data)
+    
+    
 
     const navigate = useNavigate()
+
+    const fetchJobsData = async () => {
+
+        try {
+            const response = await axios.get(backendUrl + '/api/jobs/')
+
+            if (response.data.success) {
+                setData(response.data.jobs)
+            }
+            else {
+                console.log('Failed to fetch data');
+            }
+
+        } catch (error) {
+            toast.error('Network Error')
+        }
+    }
+    
+    
+    useEffect(() => {
+        fetchJobsData()
+    }, [])
 
     const handleChangeCatergory = (category) => {
         setSelectedCategories(
@@ -44,13 +72,13 @@ const JobList = () => {
 
         const mathcesLocationSearch = job => searchFilter.location === "" || job.title.toLowerCase().includes(searchFilter.location.toLowerCase())
 
-        const newfilteredJobs = jobs.slice().reverse().filter(
+        const newfilteredJobs = data.slice().reverse().filter(
             job => mathcesCategory(job) && mathcesLocation(job) && mathcesTitle(job) && mathcesLocationSearch(job)
         )
 
         setFilteredJobs(newfilteredJobs)
         setCurrentPage(1)
-    }, [jobs, selectedCategories, selectedLocation, searchFilter])
+    }, [data, selectedCategories, selectedLocation, searchFilter])
 
     //console.log(filteredJobs)
 
