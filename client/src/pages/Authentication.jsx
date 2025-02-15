@@ -81,25 +81,19 @@ const Authentication = () => {
                     password: data.password
                 })
 
-                console.log(response.data.message);
-
-
-
                 if (response.data.user) {
                     setUserData(response.data.user);
                     setUserToken(response.data.token)
                     localStorage.setItem('userToken', response.data.token)
-                    //navigate('/')
-                    /*setData({
+                    navigate('/')
+                    setData({
                         email: '',
                         password: '',
-                    })*/
+                    })
 
                     toast.success('Logined successfully')
                 }
                 else {
-                    console.log('error');
-
                     toast.error(response.data.message)
                 }
 
