@@ -8,6 +8,7 @@ import LoginPopUp from './components/LoginPopUp'
 import RecruiterLogin from './components/RecruiterLogin'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify';
+import Authentication from './pages/Authentication'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
               <Route path='/' element={<Home setShowRecruiterLogin={setShowRecruiterLogin} showRecruiterLogin={showRecruiterLogin} />} />
               <Route path='/Apply-job/:id' element={<ApplyJob />} />
               <Route path='/Applications' element={<Applications />} />
+              <Route path='/Authentication' element={<Authentication />} />
             </Routes>
           </div>
         </AppcontextProvider>
