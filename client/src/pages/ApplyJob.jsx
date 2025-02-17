@@ -27,7 +27,7 @@ const ApplyJob = () => {
     const data = jobs.filter(job => job._id === id)
     if (data.length > 0) {
       setJobData(data[0])
-      console.log(data[0]);
+      //console.log(data[0]);
     }
   }
 
@@ -38,7 +38,7 @@ const ApplyJob = () => {
 
   }, [id, jobs])
 
-  console.log(jobData._id);
+  //console.log(jobData._id);
   
 
   const applyUserForJob = async () => {
@@ -82,7 +82,7 @@ const ApplyJob = () => {
                   </span>
                   <span className='flex items-center gap-1'>
                     <img src={assets.person_icon} alt="" />
-                    {jobData.level}
+                    {jobData.joblevel}
                   </span>
                   <span className='flex items-center gap-1'>
                     <img src={assets.money_icon} alt="" />

@@ -85,6 +85,7 @@ const Authentication = () => {
                     setUserData(response.data.user);
                     setUserToken(response.data.token)
                     localStorage.setItem('userToken', response.data.token)
+                    setIsSubmitted(true)
                     navigate('/')
                     setData({
                         email: '',
