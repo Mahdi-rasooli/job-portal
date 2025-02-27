@@ -190,31 +190,48 @@ const getUserApllicationsForJob = async (req, res) => {
 }
 
 const updateUserResume = async (req, res) => {
-
+    
     try {
-        
-        const userId = req.user._id
+        const userId = req.user._id;
 
-        const resumeFile = req.resumeFile
+        const resumeFile = req.file;
 
-        const userData = await userModel.findById(userId)
-
-        if (resumeFile) {
-            const resumeUpload = await cloudinary.uploader.upload(resumeFile.path)
-            userData.resume = resumeUpload.secure_url
+        if (!resumeFile) {
+            return res.status(400).json({ success: false, message: "No file uploaded" });
         }
 
-        await userData.save()
+        let resumeUpload;
 
-        return res.status(200).json({success:true , message:'Resume updated'})
+        try {
+
+            resumeUpload = await cloudinary.uploader.upload(resumeFile.path);
+
+        } catch (uploadError) {
+            
+            return res.status(500).json({ success: false, message: "Resume upload failed" });
+        }
+
+        if (!resumeUpload?.secure_url) {
+            return res.status(500).json({ success: false, message: "Cloudinary did not return a secure URL" });
+        }
+
+        const userData = await userModel.findById(userId);
+        if (!userData) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        userData.resume = resumeUpload.secure_url;
+        await userData.save();
+
+        return res.status(200).json({ success: true, message: "Resume updated successfully", resume: userData.resume });
 
     } catch (error) {
-        return res.status(500).json({success:false , message:error.message})
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 }
 
 
-const updatePassword = async (req,res) => {
+const updatePassword = async (req, res) => {
 
     try {
 
@@ -227,13 +244,13 @@ const updatePassword = async (req,res) => {
         const userData = await userModel.findById(userId)
 
         if (!userData) {
-            return res.status(404).json({ success: false , message: 'User does not exist'})
+            return res.status(404).json({ success: false, message: 'User does not exist' })
         }
-        
+
         const newPassword = req.body.password
 
         if (!newPassword) {
-            return res.status(400).json({ success: false , message: 'Missing password'})
+            return res.status(400).json({ success: false, message: 'Missing password' })
         }
 
         if (newPassword.length < 8 || !/[A-Z]/.test(newPassword) || !/[0-9]/.test(newPassword)) {
@@ -255,14 +272,14 @@ const updatePassword = async (req,res) => {
 
         await userData.save()
 
-        return res.status(200).json({ success: true , message: 'Password updated successfully'})
+        return res.status(200).json({ success: true, message: 'Password updated successfully' })
 
 
     } catch (error) {
-        return res.status(500).json({ success: false , message: error.message})
+        return res.status(500).json({ success: false, message: error.message })
     }
 }
 
 
 
-export { getUserData, getUserApllicationsForJob, loginUser, registerUser, updateUserResume, applyForJob , updatePassword }
+export { getUserData, getUserApllicationsForJob, loginUser, registerUser, updateUserResume, applyForJob, updatePassword }

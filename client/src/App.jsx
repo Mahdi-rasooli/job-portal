@@ -28,7 +28,7 @@ function App() {
             <Routes>
               <Route path='/' element={<Home setShowRecruiterLogin={setShowRecruiterLogin} showRecruiterLogin={showRecruiterLogin} />} />
               <Route path='/Apply-job/:id' element={<ApplyJob />} />
-              <Route path='/Applications' element={<Applications />} />
+              <Route path='/Applications/:id' element={<Applications />} />
               <Route path='/Authentication' element={<Authentication />} />
             </Routes>
           </div>

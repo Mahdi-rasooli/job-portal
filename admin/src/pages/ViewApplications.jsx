@@ -102,8 +102,8 @@ const ViewApplications = () => {
                     <div className='relative inline-block text-left group'>
                       <button className='text-gray-500 action-button'>...</button>
                       <div className='z-10 hidden absolute right-0 md:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block'>
-                        <button onClick={() => changeStatus(applicant.userId._id, 'Accept',job._id)} className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 cursor-pointer'>Accept</button>
-                        <button onClick={() => changeStatus(applicant.userId._id, 'Reject',job._id)}  className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer'>Reject</button>
+                        <button onClick={() => changeStatus(applicant.userId._id, 'Accepted',job._id)} className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 cursor-pointer'>Accept</button>
+                        <button onClick={() => changeStatus(applicant.userId._id, 'Rejected',job._id)}  className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer'>Reject</button>
                         <button onClick={() => changeStatus(applicant.userId._id, 'Reviewed',job._id)}  className='block w-full text-left px-4 py-2 text-gray-500 hover:bg-gray-100 cursor-pointer'>Reviewed</button>
                       </div>
                     </div>
