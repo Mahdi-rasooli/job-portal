@@ -33,6 +33,10 @@ import lock_icon from './lock_icon.svg'
 import samsung_logo from './samsung_logo.png'
 import adobe_logo from './adobe_logo.png'
 import amazon_logo from './amazon_logo.png'
+import form_logo from './form.png'
+import password_logo from './padlock.png'
+import applications from './search-file.png'
+
 
 export const assets = {
     logo,
@@ -69,7 +73,10 @@ export const assets = {
     lock_icon,
     samsung_logo,
     adobe_logo,
-    amazon_logo
+    amazon_logo,
+    form_logo,
+    password_logo,
+    applications
 }
 
 export const JobCategories = [

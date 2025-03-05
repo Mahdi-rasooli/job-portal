@@ -9,6 +9,7 @@ import RecruiterLogin from './components/RecruiterLogin'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify';
 import Authentication from './pages/Authentication'
+import Profile from './pages/Profile'
 
 function App() {
 
@@ -28,8 +29,12 @@ function App() {
             <Routes>
               <Route path='/' element={<Home setShowRecruiterLogin={setShowRecruiterLogin} showRecruiterLogin={showRecruiterLogin} />} />
               <Route path='/Apply-job/:id' element={<ApplyJob />} />
-              <Route path='/Applications/:id' element={<Applications />} />
+              {/* <Route path='/Applications/:id' element={<Applications />} /> */}
               <Route path='/Authentication' element={<Authentication />} />
+              <Route path='/:id/profile' element={<Profile />}>
+                <Route path='applicaions' element={<Applications />} />
+                {/* <Route path='/change-password' element={<ChangePassword />} /> */}
+              </Route>
             </Routes>
           </div>
         </AppcontextProvider>
