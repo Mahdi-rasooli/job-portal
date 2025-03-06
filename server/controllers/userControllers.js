@@ -280,6 +280,22 @@ const updatePassword = async (req, res) => {
     }
 }
 
+const getUserDataWithPassword = async (req, res) => {
 
+    try {
+        const id = req.user._id
 
-export { getUserData, getUserApllicationsForJob, loginUser, registerUser, updateUserResume, applyForJob, updatePassword }
+        const user = await userModel.findById(id)
+
+        if (!user) {
+            res.status(404).json({ success: false, message: "User not found" })
+        }
+
+        return res.status(200).json({ success: true, userData: user })
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message })
+    }
+}
+
+export { getUserData, getUserApllicationsForJob, loginUser, registerUser, updateUserResume, applyForJob, updatePassword , getUserDataWithPassword }

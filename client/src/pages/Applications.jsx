@@ -86,7 +86,6 @@ const Applications = () => {
 
   return (
     <>
-      <Navbar />
       <div className="container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10">
         <h2 className="text-xl font-semibold">Your Resume</h2>
         <div className="flex gap-2 mb-6 mt-3">
@@ -106,8 +105,9 @@ const Applications = () => {
               </button>
             </div>}
 
-        </div>
+        </div> 
         <h2 className="text-xl mb-4 font-semibold">Jobs applied</h2>
+        {applicantsData.length > 0 ?
         <table className="min-w-full bg-white border rounded-lg ">
           <thead>
             <tr>
@@ -136,9 +136,8 @@ const Applications = () => {
               </tr>
             ) : (null))}
           </tbody>
-        </table>
+        </table> :  <h1>There is no applied yet</h1>}
       </div>
-      <Footer />
     </>
   );
 };

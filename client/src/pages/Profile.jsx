@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { assets } from '../../../client/src/assets/assets';
 import { AppContext } from '../context/contextStore';
+import Footer from '../components/Footer';
 
 const SidebarLinks = () => (
 
@@ -16,7 +17,7 @@ const SidebarLinks = () => (
 
     <NavLink
       className={({ isActive }) => `flex items-center mb-2 p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${isActive ? "bg-blue-100 border-r-4 border-r-blue-500" : ""}`}
-      to={'/profile/change-password'}
+      to={'change-password'}
     >
       <img className="w-6" src={assets.password_logo} alt="Change Password" />
       <p>Change Password</p>
@@ -24,7 +25,7 @@ const SidebarLinks = () => (
 
     <NavLink
       className={({ isActive }) => `flex items-center mb-2 p-3 sm:px-6 gap-2 w-full hover:bg-gray-100 ${isActive ? "bg-blue-100 border-r-4 border-r-blue-500" : ""}`}
-      to={'/applications'}
+      to={'applications'}
     >
       <img className="w-6" src={assets.applications} alt="Applications" />
       <p>Applications</p>
@@ -39,7 +40,7 @@ const Profile = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    
+    <>
     <div className="min-h-screen flex flex-col">
       <div className="flex justify-center max-sm:justify-between w-full px-4 2xl:px-20 mx-auto items-center shadow py-4">
         {!isSidebarOpen ? (
@@ -69,7 +70,11 @@ const Profile = () => {
           <Outlet />
         </div>
       </div>
+      
     </div>
+      <Footer />
+
+    </>
   );
 };
 

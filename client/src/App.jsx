@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import Authentication from './pages/Authentication'
 import Profile from './pages/Profile'
 import ProfileDetails from './components/ProfileDetails'
+import ChangePassword from './components/ChangePassword'
 
 function App() {
 
@@ -33,9 +34,11 @@ function App() {
               {/* <Route path='/Applications/:id' element={<Applications />} /> */}
               <Route path='/Authentication' element={<Authentication />} />
               <Route path='/:id/profile' element={<Profile />}>
+                <Route path='' element={<ProfileDetails />} />
                 <Route path='applicaions' element={<Applications />} />
                 <Route path='details' element={<ProfileDetails />} />
-                {/* <Route path='/change-password' element={<ChangePassword />} /> */}
+                <Route path='change-password' element={<ChangePassword />} /> 
+                <Route path='Applications' element={<Applications />} /> 
               </Route>
             </Routes>
           </div>

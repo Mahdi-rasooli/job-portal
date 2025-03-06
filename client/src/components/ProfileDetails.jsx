@@ -10,7 +10,7 @@ const ProfileDetails = () => {
     const navigate = useNavigate()
 
 
-    console.log(userData);
+    //console.log(userData);
 
 
     const handleLogOut = () => {
@@ -25,7 +25,7 @@ const ProfileDetails = () => {
 
     useEffect(() => {
         setResumeUrl(userData.resume)
-    }, [userData])
+    }, [userData.resume])
 
 
 
@@ -33,7 +33,7 @@ const ProfileDetails = () => {
         <div className='min-h-screen p-5 mx-auto max-sm:text-center'>
             <h1 className=' text-2xl'>My Profile</h1>
             <div className='p-6 flex flex-col mt-6 border border-gray-100 rounded-md max-sm:border-none '>
-                <img className='mb-6 w-[70px] max-sm:mx-auto' src={userData.image} alt="" />
+                <img className='mb-6 w-[70px] max-sm:mx-auto border border-gray-100 rounded-full' src={userData.image} alt="" />
                 <div className=' grid grid-cols-2 gap-6 mt-4 max-sm:flex max-sm:flex-col'>
                     <div>
                         <label className='text-gray-500' htmlFor="">Username</label>

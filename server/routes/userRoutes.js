@@ -1,5 +1,5 @@
 import express from 'express'
-import {getUserData , getUserApllicationsForJob , loginUser , registerUser , updateUserResume , applyForJob, updatePassword} from '../controllers/userControllers.js'
+import {getUserData , getUserApllicationsForJob , loginUser , registerUser , updateUserResume , applyForJob, updatePassword , getUserDataWithPassword} from '../controllers/userControllers.js'
 import protectUser from '../middlewares/authMiddlewareUsers.js'
 import upload from '../config/multer.js'
 
@@ -12,5 +12,7 @@ userRouter.post('/update-resume', protectUser , upload.single('resume') ,  updat
 userRouter.get('/user-application/:userId', protectUser , getUserApllicationsForJob)
 userRouter.post('/apply-job', protectUser , applyForJob)
 userRouter.put('/update-password/:userId', protectUser , updatePassword)
+userRouter.get('/user-data' , protectUser , getUserDataWithPassword)
+
 
 export default userRouter
